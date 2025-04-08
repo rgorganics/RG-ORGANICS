@@ -1,1 +1,153 @@
-// Placeholder for index.html
+// NavBar Component
+function NavBar({ cartItems }) {
+  return (
+    <nav className="bg-green-100 p-4 flex justify-between items-center shadow">
+      <div className="flex items-center gap-3">
+        <img src="/images/logo-grovana.png" alt="Logo" className="h-10" />
+        <h1 className="text-2xl font-bold text-green-800">R&G Organics</h1>
+      </div>
+      <ul className="flex gap-6 text-green-700 font-medium">
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/about">About</Link></li>
+        <li><Link to="/shop">Shop</Link></li>
+        <li><Link to="/contact">Contact</Link></li>
+        <li><Link to="/cart">Cart ({cartItems.length})</Link></li>
+      </ul>
+    </nav>
+  );
+}
+
+// Home Page
+function HomePage() {
+  return (
+    <div className="min-h-screen bg-green-50 p-6 font-sans">
+      <header className="text-center mb-10">
+        <h1 className="text-4xl font-bold text-green-800">Welcome to R&G Organics</h1>
+        <p className="text-lg text-green-600">Authentic Taste, Unmatched Quality</p>
+      </header>
+
+      <section className="mb-10 text-center">
+        <h2 className="text-2xl font-semibold text-green-700">Our Mission</h2>
+        <p className="text-green-800 max-w-xl mx-auto">
+          To deliver pure, organic herbal tea sourced responsibly from nature's lap. GROVANA is our commitment to wellness, rooted in Indian tradition.
+        </p>
+      </section>
+
+      <section className="text-center mb-12">
+        <img src="/images/grovana-banner.png" alt="GROVANA Tea" className="mx-auto rounded-xl shadow" />
+        <h3 className="text-xl font-semibold text-green-700 mt-4">Try GROVANA Today!</h3>
+      </section>
+
+      <footer className="text-center text-green-600 mt-12">
+        <p>Packaged by R&G Organics, Siliguri, West Bengal</p>
+        <p>© 2025 R&G Organics. All rights reserved.</p>
+      </footer>
+    </div>
+  );
+}
+
+// About Page
+function AboutPage() {
+  return (
+    <div className="min-h-screen bg-green-50 p-6 font-sans text-green-800">
+      <h1 className="text-3xl font-bold mb-4">About R&G Organics</h1>
+      <p className="mb-4">
+        Founded by Gyanish and Rishabh, R&G Organics is built on a dream to create a sustainable and healthy lifestyle. Our product GROVANA blends the best of nature and tradition into every sip.
+      </p>
+    </div>
+  );
+}
+
+// Shop Page
+function ShopPage({ addToCart }) {
+  const products = [
+    { name: "GROVANA - 50g", price: 99, img: "/images/grovana-50g.png" },
+    { name: "GROVANA - 100g", price: 179, img: "/images/grovana-100g.png" },
+    { name: "GROVANA - 250g", price: 399, img: "/images/grovana-250g.png" },
+  ];
+
+  return (
+    <div className="min-h-screen bg-green-50 p-6">
+      <h1 className="text-3xl font-bold text-green-800 mb-6">Shop GROVANA</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {products.map((product, index) => (
+          <div key={index} className="bg-white rounded-xl shadow p-4">
+            <img src={product.img} alt={product.name} className="mb-4 rounded" />
+            <h2 className="text-lg font-semibold text-green-700">{product.name}</h2>
+            <p className="text-green-800 mb-2">₹{product.price}</p>
+            <button onClick={() => addToCart(product)} className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800">
+              Add to Cart
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Cart Page
+function CartPage({ cartItems, checkout }) {
+  const total = cartItems.reduce((sum, item) => sum + item.price, 0);
+
+  return (
+    <div className="min-h-screen bg-green-50 p-6">
+      <h1 className="text-3xl font-bold text-green-800 mb-6">Your Cart</h1>
+      {cartItems.length === 0 ? (
+        <p className="text-green-700">Your cart is empty.</p>
+      ) : (
+        <div>
+          <ul className="mb-4">
+            {cartItems.map((item, idx) => (
+              <li key={idx} className="text-green-800 mb-2">{item.name} - ₹{item.price}</li>
+            ))}
+          </ul>
+          <p className="font-semibold text-green-800 mb-2">Total: ₹{total}</p>
+          <button onClick={checkout} className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800">
+            Proceed to Checkout
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Contact Page
+function ContactPage() {
+  return (
+    <div className="min-h-screen bg-green-50 p-6">
+      <h1 className="text-3xl font-bold text-green-800 mb-4">Contact Us</h1>
+      <p className="mb-4 text-green-700">
+        Reach out for orders, partnerships, or feedback!
+      </p>
+      <ul className="text-green-800">
+        <li><strong>Email:</strong> contact@rgorganics.in</li>
+        <li><strong>WhatsApp:</strong> +91-XXXXXXXXXX</li>
+        <li><strong>Address:</strong> R&G Organics, Siliguri, West Bengal</li>
+      </ul>
+    </div>
+  );
+}
+
+// App Component
+export default function App() {
+  const [cartItems, setCartItems] = useState([]);
+
+  const addToCart = (item) => setCartItems([...cartItems, item]);
+  const checkout = () => {
+    alert("Order placed successfully! Payment gateway integration pending.");
+    setCartItems([]);
+  };
+
+  return (
+    <Router>
+      <NavBar cartItems={cartItems} />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/shop" element={<ShopPage addToCart={addToCart} />} />
+        <Route path="/cart" element={<CartPage cartItems={cartItems} checkout={checkout} />} />
+        <Route path="/contact" element={<ContactPage />} />
+      </Routes>
+    </Router>
+  );
+}
